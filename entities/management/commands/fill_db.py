@@ -27,18 +27,22 @@ class Command(BaseCommand):
         entities = []
 
         self.stdout.write("Creating new entities.client objects...")
-        for i in tqdm(range(CLIENTS_NUM)):
-            client = ClientFactory()
+        clients = ClientFactory.create_batch(CLIENTS_NUM)
+        self.stdout.write(f"{CLIENTS_NUM} entities.contact objects are created!\n\n")
+
+        self.stdout.write("Creating new entities.contact objects...")
+        for client in tqdm(clients):
             Contact.objects.create(client=client, type=ContactConstants.EMAIL, value=FAKER.email())
             Contact.objects.create(client=client, type=ContactConstants.PHONE, value=FAKER.phone_number())
             Contact.objects.create(client=client, type=ContactConstants.VK, value=FAKER.user_name())
-            clients.append(client)
+        self.stdout.write(f"entities.contact for entities.client objects are created!\n\n")
 
         self.stdout.write("Creating new entities.entity objects...")
-        for _ in tqdm(range(ENTITIES_NUM)):
-            entity = EntityFactory()
-            entities.append(entity)
+        entities = EntityFactory.create_batch(ENTITIES_NUM)
+        self.stdout.write(f"{ENTITIES_NUM} entities.entity objects are created!\n\n")
 
+        # Did not use batch here to put random existing legal entities.
+        # Need to figure out how to put them with the batch.
         self.stdout.write("Creating new entities.department objects...")
         for _ in tqdm(range(DEPARTMENTS_NUM)):
             department_entity = random.choice(entities)
@@ -48,3 +52,4 @@ class Command(BaseCommand):
             for department_client in department_clients:
                 for member in department.get_family():
                     ClientToDepartment.objects.create(department=member, client=department_client)
+        self.stdout.write(f"{DEPARTMENTS_NUM} entities.department objects are created!")
