@@ -41,7 +41,8 @@ class Command(BaseCommand):
         entities = EntityFactory.create_batch(ENTITIES_NUM)
         self.stdout.write(f"{ENTITIES_NUM} entities.entity objects are created!\n\n")
 
-        # Did not use batch here to put random existing legal entities. Need to figure out how to put them with the batch.
+        # Did not use batch here to put random existing legal entities.
+        # Need to figure out how to put them with the batch.
         self.stdout.write("Creating new entities.department objects...")
         for _ in tqdm(range(DEPARTMENTS_NUM)):
             department_entity = random.choice(entities)
