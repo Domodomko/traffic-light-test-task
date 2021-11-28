@@ -150,6 +150,6 @@ dmypy.json
 cython_debug/
 
 #PyCharm
-.idea
+.idea/*
 
 # End of https://www.toptal.com/developers/gitignore/api/django
