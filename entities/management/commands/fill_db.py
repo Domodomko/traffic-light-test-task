@@ -11,7 +11,7 @@ from entities.factories import ClientFactory, EntityFactory, DepartmentFactory
 FAKER = faker.Faker()
 
 CLIENTS_NUM = 30000
-ENTITIES_NUM = 30000
+ENTITIES_NUM = 200
 DEPARTMENTS_NUM = 100  # It creates 7 items at a time
 CLIENTS_PER_DEPARTMENT = 5
 
