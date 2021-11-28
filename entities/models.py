@@ -49,11 +49,13 @@ class Client(AutoIdentificationNumberMixin, AbstractUser):
         super().save(force_insert, force_update, *args, **kwargs)
         self.__old_is_active = self.is_active
 
+    def full_name(self):
+        return "{} {} {}".format(self.first_name, self.last_name, self.patronymic)
 
 class Contact(models.Model):
     type = models.IntegerField(choices=ContactConstants.CHOICES, default=ContactConstants.EMAIL, verbose_name="Тип")
     value = models.CharField(max_length=32, verbose_name="Значение")
-    client = models.ForeignKey("entities.Client", on_delete=models.CASCADE, verbose_name="Клиент")
+    client = models.ForeignKey("entities.Client", on_delete=models.CASCADE, related_name="contacts", verbose_name="Клиент")
 
     class Meta:
         verbose_name = "Контакт Клиента"
@@ -97,7 +99,7 @@ class Department(AutoIdentificationNumberMixin, MPTTModel):
         related_name="children",
     )
 
-    entity = models.ForeignKey("entities.Entity", on_delete=models.CASCADE)
+    entity = models.ForeignKey("entities.Entity", on_delete=models.CASCADE, related_name="departments", verbose_name="Юридическое лицо")
 
     __MAXIMUM_TREE_DEPTH = 7
     identification_number_ending = "03"
@@ -120,6 +122,21 @@ class Department(AutoIdentificationNumberMixin, MPTTModel):
 
     clients_amount.short_description = "Количество клиентов"
 
+    def entity_name(self):
+        return self.entity.full_name
+    
+    def parent_name(self):
+        if self.parent:
+            return self.parent.name
+        else:
+            return None
+    
+    def parent_identification_number(self):
+        if self.parent:
+            return self.parent.identification_number
+        else:
+            return None
+
 
 class ClientToDepartment(models.Model):
     client = models.ForeignKey("entities.Client", on_delete=models.CASCADE, related_name="departments",
@@ -131,3 +148,15 @@ class ClientToDepartment(models.Model):
     class Meta:
         verbose_name = "Клиент Департамента"
         verbose_name_plural = "Клиенты Департамента"
+
+    def department_name(self):
+        return self.department.name
+    
+    def department_identification_number(self):
+        return self.department.identification_number
+
+    def client_full_name(self):
+        return self.client.full_name()
+    
+    def client_identification_number(self):
+        return self.client.identification_number

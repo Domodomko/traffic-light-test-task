@@ -9,6 +9,8 @@ django-mptt = "*"
 python-decouple = "*"
 djangorestframework = "*"
 factory-boy = "*"
+django-debug-toolbar = "*"
+drf-yasg = "*"
 
 [dev-packages]
 
