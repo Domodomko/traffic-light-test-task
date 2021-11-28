@@ -11,6 +11,7 @@ djangorestframework = "*"
 factory-boy = "*"
 django-debug-toolbar = "*"
 drf-yasg = "*"
+tqdm = "*"
 
 [dev-packages]
 
